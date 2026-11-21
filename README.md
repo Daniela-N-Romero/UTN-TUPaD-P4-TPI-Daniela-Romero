@@ -25,16 +25,17 @@ Aplicación web full-stack compuesta por un backend en **FastAPI + SQLModel** (P
 ### Backend (`backend/.env.example` → `backend/.env`)
 
 | Variable | Descripción | Ejemplo |
-| :--- | :--- | :--- |
-| `POSTGRES_USER` | Usuario para la cadena de conexión a PostgreSQL | `postgresql://postgres:postgres@localhost:5432/foodstore_TPI`
-| `POSTGRES_PASSWORD` | Contraseña para la cadena de conexión a PostgreSQL | `postgresql://postgres:postgres@localhost:5432/foodstore_TPI`
-| `POSTGRES_DB` | Nombre para la cadena de conexión a PostgreSQL | `postgresql://postgres:postgres@localhost:5432/foodstore_TPI`
-| `POSTGRES_HOST` | Host para la cadena de conexión a PostgreSQL | `postgresql://postgres:postgres@localhost:5432/foodstore_TPI`
-| `POSTGRES_PORT` | Puerto para la cadena de conexión a PostgreSQL | `postgresql://postgres:postgres@localhost:5432/foodstore_TPI`
+| :--- | :----- | :--- |
+| `POSTGRES_USER` | Usuario para la cadena de conexión a PostgreSQL | `POSTGRES_USER=juan123`
+| `POSTGRES_PASSWORD` | Contraseña para la cadena de conexión a PostgreSQL | `POSTGRES_PASSWORD=12345678`
+| `POSTGRES_DB` | Nombre para la cadena de conexión a PostgreSQL | `POSTGRES_DB=foodstore_TPI`
+| `POSTGRES_HOST` | Host para la cadena de conexión a PostgreSQL | `POSTGRES_HOST=localhost`
+| `POSTGRES_PORT` | Puerto para la cadena de conexión a PostgreSQL | `POSTGRES_PORT=5432`
 | `SECRET_KEY` | Clave secreta para firmar JWT (mínimo 32 caracteres) | `cambiar-esta-clave-de-al-menos-32-caracteres`
 | `ALGORITHM` | Algoritmo de firma del JWT | `HS256`|
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | Duración en minutos de la cookie/token | `30`|
 | `FRONTEND_ORIGIN` | Origen permitido para CORS con credenciales| `http://localhost:5173`
+
 
 ### Frontend (`frontend/.env.example` → `frontend/.env`)
 
@@ -84,7 +85,9 @@ Aplicación web full-stack compuesta por un backend en **FastAPI + SQLModel** (P
 
 Las pruebas corren con pytest utilizando SQLite en memoria mediante dependency_overrides, sin modificar la base de datos PostgreSQL:
    ```powershell
-   pytest
+   cd backend
+
+   python -m pytest
    ```
 
 ---

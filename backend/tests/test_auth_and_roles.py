@@ -4,11 +4,13 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session
 
 
-def _crear_admin_en_bd(session: Session, username: str = "admin_test", password: str = "Admin1234!") -> Usuario:
+def _crear_admin_en_bd(
+    session: Session, username: str = "admin_test", password: str = "Admin1234!"
+) -> Usuario:
     admin = Usuario(
         username=username,
         full_name="Admin Test",
-        email="admin@foodstore.local",
+        email="admin_test@foodstore.com",
         hashed_password=hash_password(password),
         role="admin",
         disabled=False,
@@ -20,20 +22,20 @@ def _crear_admin_en_bd(session: Session, username: str = "admin_test", password:
 
 
 def test_registro_login_cookie_me_y_logout(client: TestClient) -> None:
-    # 1. Registro con rol por defecto "user" -> 201
-    res_registro = client.post(
+    # 1. Registro con rol por defecto "user"
+    res_reg = client.post(
         "/api/v1/auth/register",
         json={
             "username": "cliente1",
             "full_name": "Cliente Uno",
-            "email": "cliente1@foodstore.local",
+            "email": "cliente1@foodstore.com",
             "password": "Password123!",
         },
     )
-    assert res_registro.status_code == 201
-    data_registro = res_registro.json()
-    assert data_registro["role"] == "user"
-    assert data_registro["disabled"] is False
+    assert res_reg.status_code == 201, res_reg.json()
+    data_reg = res_reg.json()
+    assert data_reg["role"] == "user"
+    assert data_reg["disabled"] is False
 
     # 2. Duplicado -> 409
     res_dup = client.post(
@@ -41,7 +43,7 @@ def test_registro_login_cookie_me_y_logout(client: TestClient) -> None:
         json={
             "username": "cliente1",
             "full_name": "Cliente Duplicado",
-            "email": "otro@foodstore.local",
+            "email": "otro@foodstore.com",
             "password": "Password123!",
         },
     )
@@ -73,19 +75,22 @@ def test_401_sin_sesion_y_403_rol_user_en_admin(client: TestClient) -> None:
     assert client.get("/api/v1/admin/usuarios").status_code == 401
 
     # Registrar y loguear usuario "user"
-    client.post(
+    res_reg = client.post(
         "/api/v1/auth/register",
         json={
             "username": "user_comun",
             "full_name": "Usuario Comun",
-            "email": "comun@foodstore.local",
+            "email": "comun@foodstore.com",
             "password": "Password123!",
         },
     )
-    client.post(
+    assert res_reg.status_code == 201, res_reg.json()
+
+    res_login = client.post(
         "/api/v1/auth/token",
         data={"username": "user_comun", "password": "Password123!"},
     )
+    assert res_login.status_code == 200
 
     # Rol "user" en ruta de "admin" -> 403
     res_forbidden = client.get("/api/v1/admin/usuarios")
@@ -96,29 +101,32 @@ def test_admin_desactiva_usuario_idempotencia_y_bloqueo_auto_desactivacion(
     client: TestClient, session: Session
 ) -> None:
     admin = _crear_admin_en_bd(session)
-
+    admin_id = admin.id
+    admin_username = admin.username
+    
     # Registrar usuario a gestionar
     res_user = client.post(
         "/api/v1/auth/register",
         json={
             "username": "a_desactivar",
             "full_name": "A Desactivar",
-            "email": "desactivar@foodstore.local",
+            "email": "desactivar@foodstore.com",
             "password": "Password123!",
         },
     )
+    assert res_user.status_code == 201, res_user.json()
     user_id = res_user.json()["id"]
 
     # Login como admin
     res_admin_login = client.post(
         "/api/v1/auth/token",
-        data={"username": admin.username, "password": "Admin1234!"},
+        data={"username": admin_username, "password": "Admin1234!"},
     )
     assert res_admin_login.status_code == 200
 
     # Admin no puede desactivarse a sí mismo -> 400
-    assert admin.id is not None
-    res_self = client.post(f"/api/v1/admin/usuarios/{admin.id}/desactivar")
+    assert admin_id is not None
+    res_self = client.post(f"/api/v1/admin/usuarios/{admin_id}/desactivar")
     assert res_self.status_code == 400
 
     # Desactivar dos veces (idempotencia -> 200)
@@ -139,7 +147,7 @@ def test_admin_desactiva_usuario_idempotencia_y_bloqueo_auto_desactivacion(
     # Re-login admin y activar dos veces (idempotencia -> 200)
     client.post(
         "/api/v1/auth/token",
-        data={"username": admin.username, "password": "Admin1234!"},
+        data={"username": admin_username, "password": "Admin1234!"},
     )
     assert client.post(f"/api/v1/admin/usuarios/{user_id}/activar").status_code == 200
     res_act_2 = client.post(f"/api/v1/admin/usuarios/{user_id}/activar")

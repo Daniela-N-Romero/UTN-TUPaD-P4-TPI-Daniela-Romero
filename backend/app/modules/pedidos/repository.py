@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 from app.core.base_repository import BaseRepository
 from app.modules.pedidos.models import Pedido
-from sqlalchemy import selectinload
+from sqlalchemy.orm import selectinload
 from sqlmodel import Session, func, select
 
 

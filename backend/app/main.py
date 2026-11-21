@@ -1,10 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-import app.modules.categorias.models as categoria_models  # noqa
-import app.modules.pedidos.models as pedido_models  # noqa
-import app.modules.productos.models as producto_models  # noqa
-import app.modules.usuarios.models as usuarios_models  # noqa
 from app.core.config import settings
 from app.core.database import create_all_tables, get_session
 from app.db.seed import ejecutar_seed
@@ -33,11 +29,11 @@ def on_startup():
 API_PREFIX = "/api/v1"
 
 # Incluimos las rutas de categorías
+app.include_router(auth_router, prefix=API_PREFIX)
+app.include_router(usuarios_router, prefix=API_PREFIX)
 app.include_router(categorias_router, prefix=API_PREFIX)
 app.include_router(productos_router, prefix=API_PREFIX)
 app.include_router(pedidos_router, prefix=API_PREFIX)
-app.include_router(usuarios_router, prefix=API_PREFIX)
-app.include_router(auth_router, prefix=API_PREFIX)
 
 @app.get("/")
 def read_root():

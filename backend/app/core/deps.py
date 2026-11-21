@@ -53,17 +53,10 @@ async def get_current_user(
             usuario = uow.usuarios.get_by_email(sub)
         if usuario is None:
             raise credentials_exception
-        # Expone/refresca atributos simples antes de cerrar la sesión al salir del with
-        _ = (
-            usuario.id,
-            usuario.username,
-            usuario.full_name,
-            usuario.email,
-            usuario.role,
-            usuario.disabled,
-            usuario.created_at,
-        )
-        return usuario
+        
+        # Devolvemos una copia en memoria para que siga disponible al cerrarse la sesión
+        # del Unit of Work en dependencias posteriores (como get_current_active_user).
+        return usuario.model_copy()
 
 
 async def get_current_active_user(

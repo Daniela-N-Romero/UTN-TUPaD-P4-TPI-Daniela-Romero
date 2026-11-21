@@ -1,8 +1,7 @@
 from app.core.security import hash_password
 from app.modules.categorias.models import Categoria
-from app.modules.pedidos.models import EstadoPedido, FormaPago
-from app.modules.productos.models import Producto, ProductoCategoria
-from app.modules.usuarios.models import Rol, Usuario, UsuarioRol
+from app.modules.productos.models import Producto
+from app.modules.usuarios.models import Usuario
 from sqlmodel import Session, select
 
 CATEGORIAS_INICIALES: list[dict[str, str]] = [
@@ -175,3 +174,11 @@ def ejecutar_seed(session: Session) -> None:
     _seed_admin(session)
     categorias_map = _seed_categorias(session)
     _seed_productos(session, categorias_map)
+
+
+if __name__ == "__main__":
+    from app.core.database import create_all_tables, engine
+
+    create_all_tables()
+    with Session(engine) as db_session:
+        ejecutar_seed(db_session)
