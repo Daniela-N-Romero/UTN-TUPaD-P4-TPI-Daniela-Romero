@@ -104,7 +104,7 @@ Al ejecutar python -m app.db.seed se crea el usuario administrador por defecto:
 
 ## Instalación y ejecución del frontend
 
-1. Copiar `frontend/.env.example` a `frontend/.env` con VITE_API_URL=http://localhost:8000/api/v1.   
+1. Copiar `frontend/.env.example` a `frontend/.env` con VITE_API_URL=http://localhost:8000.   
 2. Instalar dependencias, verificar compilación de tipos y arrancar el servidor de desarrollo:
    ```powershell
    cd frontend
