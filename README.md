@@ -41,7 +41,7 @@ Aplicación web full-stack compuesta por un backend en **FastAPI + SQLModel** (P
 
 | Variable | Descripción | Ejemplo |
 | :--- | :--- | :--- |
-| `VITE_API_URL` | URL base de la API REST bajo `/api/v1` | `http://localhost:8000/api/v1` |
+| `VITE_API_URL` | URL base de la API REST  | `http://localhost:8000` |
 
 ---
 
