@@ -4,7 +4,7 @@ Trabajo Práctico Integrador — **Programación 4** (UTN TUPaD)
 Aplicación web full-stack compuesta por un backend en **FastAPI + SQLModel** (PostgreSQL) y un frontend en **React + TypeScript + Vite + Tailwind CSS**.
 
 - **Repositorio:** `https://github.com/Daniela-N-Romero/UTN-TUPaD-P4-TPI-Daniela-Romero.git` 
-- **Video de demostración:** `https://...` TODO : subir video
+- **Video de demostración:** `https://www.youtube.com/watch?v=8KGjNWFK59k` 
 
 ---
 
