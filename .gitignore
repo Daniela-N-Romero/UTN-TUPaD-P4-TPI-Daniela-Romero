@@ -58,6 +58,3 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
-
-#------ TEMPORAL  TODO: borrar cuando empecemos a trabajar frontend
-frontend/
